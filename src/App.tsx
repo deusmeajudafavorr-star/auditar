@@ -75,7 +75,6 @@ export default function App() {
     let formatted = targetUrl.trim();
     if (!formatted.startsWith("http://") && !formatted.startsWith("https://")) {
       formatted = "https://" + formatted;
-      setTargetUrl(formatted);
     }
 
     try {
@@ -83,6 +82,12 @@ export default function App() {
       if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") {
         setUrlError("Por razões de segurança (SSRF), redes locais/localhost não são permitidas.");
         return;
+      }
+      if (!parsed.hostname.includes(".")) {
+        formatted += ".com";
+        setTargetUrl(formatted);
+      } else {
+        setTargetUrl(formatted);
       }
     } catch {
       setUrlError("Formato de URL inválido. Exemplo: https://meusaas.com");
